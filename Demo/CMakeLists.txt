@@ -40,6 +40,7 @@ else()
             ${PROJECT_SOURCES}
             logindlg.h logindlg.cpp logindlg.ui
             newdlg.h newdlg.cpp newdlg.ui
+            res.qrc
         )
     endif()
 endif()

@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // 创建一个 QLable 对象
-    this->lab = new QLabel("Hello,World!",this);
+//    this->lab = new QLabel("Hello,World!",this);
     ui->pushButton->setText("新窗口"); //将界面上按钮的显示文本更改为“新窗口”
 }
 

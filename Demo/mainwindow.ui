@@ -123,9 +123,30 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_F">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="action_xingjian"/>
+   </widget>
+   <addaction name="menu_F"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_xingjian">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/myImg/images/rabbit.png</normaloff>:/myImg/images/rabbit.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建(&amp;N)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>
