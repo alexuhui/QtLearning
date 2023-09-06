@@ -17,6 +17,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QLabel *lab;        // 定义一个私有的 QLabel 指针对象
