@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "newdlg.h"
+#include "txtdlg.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +32,13 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     NewDlg *dlg = new NewDlg(this);
+    dlg->show();
+}
+
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    TxtDlg *dlg = new TxtDlg(this);
     dlg->show();
 }
 

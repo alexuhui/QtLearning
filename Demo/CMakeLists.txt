@@ -41,6 +41,7 @@ else()
             logindlg.h logindlg.cpp logindlg.ui
             newdlg.h newdlg.cpp newdlg.ui
             res.qrc
+            txtdlg.h txtdlg.cpp txtdlg.ui
         )
     endif()
 endif()

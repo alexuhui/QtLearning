@@ -20,6 +20,8 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButton_9_clicked();
+
 private:
     Ui::MainWindow *ui;
     QLabel *lab;        // 定义一个私有的 QLabel 指针对象
