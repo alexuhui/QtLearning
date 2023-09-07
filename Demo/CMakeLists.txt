@@ -42,6 +42,7 @@ else()
             newdlg.h newdlg.cpp newdlg.ui
             res.qrc
             txtdlg.h txtdlg.cpp txtdlg.ui
+            newtxtdlg.h newtxtdlg.cpp newtxtdlg.ui
         )
     endif()
 endif()
