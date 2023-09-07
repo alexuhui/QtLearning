@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
     {
         w.show();                      // 如果被按下，显示主窗口
         QPalette palette(w.palette());
-        palette.setColor(QPalette::Background, QColor(40, 40, 40));
+//        w.setStyleSheet("QMainWindow::title {background-color: red;}");
+        palette.setColor(QPalette::Dark, QColor("red"));
+        palette.setColor(QPalette::Window, QColor(40, 40, 40));
         w.setAutoFillBackground(true);
         w.setPalette(palette);
         w.show();

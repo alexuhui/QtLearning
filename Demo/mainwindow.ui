@@ -120,7 +120,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_F">
@@ -128,6 +128,7 @@
      <string>文件(&amp;F)</string>
     </property>
     <addaction name="action_xingjian"/>
+    <addaction name="actiondakai"/>
    </widget>
    <addaction name="menu_F"/>
   </widget>
@@ -142,6 +143,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actiondakai">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/myImg/images/eagle.png</normaloff>:/myImg/images/eagle.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开(&amp;O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
