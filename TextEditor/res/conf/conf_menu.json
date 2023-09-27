@@ -1,14 +1,109 @@
 [
     {
-        "name":"new",
-        "text":"新建(&N)",
-        "iocn":":/res/icon/045.png",
-        "hotKey":"Ctrl+N"
+        "name":"menu_file",
+        "text":"文件(&F)",
+        "actions":[
+            {
+                "name":"new",
+                "text":"新建(&N)",
+                "iocn":":/icon/076.png",
+                "hotKey":"Ctrl+N",
+                "toolbar":true,
+                "status" : "新建文件"
+            },
+            {
+                "name":"open",
+                "text":"打开(&O)",
+                "iocn":":/icon/045.png",
+                "hotKey":"Ctrl+O",
+                "toolbar":true,
+                "status" : "打开文件"
+            },
+            {
+                "name":"close",
+                "text":"关闭(&C)",
+                "iocn":":/icon/038.png",
+                "hotKey":"Ctrl+W",
+                "separator":true
+            },
+            {
+                "name":"save",
+                "text":"保存(&S)",
+                "iocn":":/icon/049.png",
+                "hotKey":"Ctrl+S",
+                "toolbar":true,
+                "status" : "保存文件"
+            },
+            {
+                "name":"save_other",
+                "text":"另存为(&A)",
+                "iocn":":/icon/049.png",
+                "toolbar":true,
+                "separator":true,
+                "status" : "文件另存为..."
+            },
+            {
+                "name":"exit",
+                "text":"退出(&X)",
+                "iocn":":/icon/047.png",
+                "hotKey":"Ctrl+Q"
+            }
+        ]
     },
     {
-        "name":"open",
-        "text":"打开(&O)",
-        "iocn":":/res/icon/045.png",
-        "hotKey":"Ctrl+O"
+        "name":"menu_edit",
+        "text":"编辑(&E)",
+        "actions":[
+            {
+                "name":"undo",
+                "text":"撤销(&Z)",
+                "iocn":":/icon/042.png",
+                "hotKey":"Ctrl+Z",
+                "separator":true
+            },
+            {
+                "name":"cut",
+                "text":"剪切(&X)",
+                "iocn":":/icon/058.png",
+                "hotKey":"Ctrl+X",
+                "toolbar":true
+            },
+            {
+                "name":"copy",
+                "text":"复制(&C)",
+                "iocn":":/icon/044.png",
+                "hotKey":"Ctrl+C",
+                "toolbar":true
+            },
+            {
+                "name":"paste",
+                "text":"粘贴(&V)",
+                "iocn":":/icon/056.png",
+                "hotKey":"Ctrl+V",
+                "separator":true,
+                "toolbar":true
+            },
+            {
+                "name":"find",
+                "text":"查找(&F)",
+                "iocn":":/icon/065.png",
+                "hotKey":"Ctrl+F",
+                "toolbar":true
+            }
+        ]
+    },
+    {
+        "name":"menu_help",
+        "text":"帮助(&H)",
+        "actions":[
+            {
+                "name":"version",
+                "text":"版本说明(&H)",
+                "iocn":":/icon/055.png",
+                "hotKey":"Ctrl+H",
+                "status":"帮助信息",
+                "toolbar":true
+            }
+        ]
     }
 ]

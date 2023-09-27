@@ -79,7 +79,7 @@
         <file>icon/076.png</file>
         <file>icon/077.png</file>
         <file>icon/app.png</file>
-        <file>icon/apple%20logo.png</file>
+        <file>icon/apple_20_logo.png</file>
         <file>icon/blender.png</file>
         <file>icon/breeze.png</file>
         <file>icon/butterfly.png</file>
@@ -100,7 +100,7 @@
         <file>icon/item_marker_symbol.png</file>
         <file>icon/mail.png</file>
         <file>icon/music.png</file>
-        <file>icon/paw%20print.png</file>
+        <file>icon/paw_20print.png</file>
         <file>icon/plus_symbol.png</file>
         <file>icon/quicktime.png</file>
         <file>icon/radioactive.png</file>
@@ -112,7 +112,7 @@
         <file>icon/trash.png</file>
         <file>icon/up_symbol.png</file>
         <file>icon/winamp.png</file>
-        <file>icon/windows%20flag.png</file>
+        <file>icon/windows_20flag.png</file>
         <file>icon/x_symbol.png</file>
     </qresource>
 </RCC>

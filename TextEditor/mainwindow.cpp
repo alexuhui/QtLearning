@@ -6,6 +6,9 @@
 #include <QJsonValue>
 #include <QFile>
 #include <QDebug>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QStatusBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    createMenuBtns();
+    createMenu();
 }
 
 MainWindow::~MainWindow()
@@ -21,7 +24,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::createMenuBtns()
+void MainWindow::createMenu()
 {
     const char* conf = ":/conf/conf_menu.json";
     // 读取JSON文件
@@ -40,29 +43,77 @@ void MainWindow::createMenuBtns()
         return;
     }
 
+    menubar = new QMenuBar(this);
+    this->setMenuBar(menubar);
+    toolbar = new QToolBar(this);
+    this->addToolBar(toolbar);
+    statusbar = new QStatusBar(this);            //创建一个状态栏
+    this->setStatusBar(statusbar);
+
     // 读取配置项
     QJsonArray arr = doc.array();
-    foreach (auto btn, arr) {
-        QJsonValue obj = btn;
-        QString name = obj["name"].toString();
-        QString txt = obj["text"].toString();
-        QString icon = obj["iocn"].toString();
-        QString hotkey = obj["hotKey"].toString();
-        createMenuBtn(name, txt, icon, hotkey);
+    foreach (auto menu, arr) {
+        createMenuBtn(menu);
     }
 }
 
-void MainWindow::createMenuBtn(QString& name, QString& txt, QString& iconPath, QString&  hotkey)
+void MainWindow::createMenuBtn(QJsonValue& menuConf)
 {
+    QString name = menuConf["name"].toString();
+    QString txt = menuConf["text"].toString();
+    QJsonArray actions = menuConf["actions"].toArray();
+
+    QMenu *menu = new QMenu(txt, this);
+    menubar->addMenu(menu);
+    menu->setObjectName(name);
+
+    bool toolbarSp = true;
+    foreach (QJsonValue action, actions) {
+        createMenuActionBtn(menu, action, toolbarSp);
+    }
+    // 如果有action添加到toolbar, action本身不带分割线，则添加分割线以区分menu
+    if(!toolbarSp)
+        toolbar->addSeparator();
+}
+
+void MainWindow::createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& toolbarSeparator)
+{
+    QString name = actionConf["name"].toString();
+    QString txt = actionConf["text"].toString();
+    QString iconPath = actionConf["iocn"].toString();
+    QString hotkey = actionConf["hotKey"].toString();
+    bool addToolbar = actionConf["toolbar"].toBool(false);
+    bool separator = actionConf["separator"].toBool(false);
+    QString status = actionConf["status"].toString();
+
     // 创建新的动作
-    QAction *openAction = new QAction(txt, this);
-    openAction->setObjectName(name);
+    QAction *actionBtn = new QAction(txt, this);
+    actionBtn->setObjectName(name);
     // 添加图标
     QIcon icon(iconPath);
-    openAction->setIcon(icon);
+    actionBtn->setIcon(icon);
     // 设置快捷键
-    openAction->setShortcut(QKeySequence(hotkey));
+    actionBtn->setShortcut(QKeySequence(hotkey));
+    //状态栏
+    actionBtn->setStatusTip(status);
     // 在文件菜单中设置新的打开动作
-    ui->menu_File->addAction(openAction);
+    menu->addAction(actionBtn);
+    // 菜单栏添加分隔符
+    if(separator)
+    {
+        menu->addSeparator();
+    }
+
+    // 添加到工具栏
+    if(addToolbar)
+    {
+        toolbar->addAction(actionBtn);
+        if(separator)
+        {
+            toolbar->addSeparator();
+        }
+        toolbarSeparator = separator;
+    }
+
 }
 

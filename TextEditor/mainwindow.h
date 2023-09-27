@@ -17,8 +17,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QMenuBar* menubar;
+    QToolBar* toolbar;
+    QStatusBar* statusbar;
 
-    void createMenuBtns();
-    void createMenuBtn(QString& name, QString& txt, QString& iconPath, QString&  hotkey);
+    void createMenu();
+    void createMenuBtn(QJsonValue& menuConf);
+    void createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& toolbarSeparator);
 };
 #endif // MAINWINDOW_H
