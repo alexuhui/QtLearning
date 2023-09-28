@@ -40,6 +40,8 @@ else()
             ${PROJECT_SOURCES}
             res/icon.qrc
             res/conf.qrc
+            src/conf/confuser.h src/conf/confuser.cpp
+
         )
     endif()
 endif()

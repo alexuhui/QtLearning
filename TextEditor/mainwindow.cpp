@@ -59,26 +59,27 @@ void MainWindow::findInit()
     QHBoxLayout *hLayout = new QHBoxLayout(findDlg);
     vLayout->addLayout(hLayout);
 
+    findFlags = confUser.getFindFlags();
     QCheckBox *qcbFindBack = new QCheckBox(tr("反向查找"), findDlg);
     hLayout->addWidget(qcbFindBack);
     connect(qcbFindBack, &QCheckBox::clicked, this, [this](bool checked){
         updateFindTextFlags(QTextDocument::FindBackward, checked);
     });
-    qcbFindBack->setCheckState(Qt::CheckState::Unchecked);
+    qcbFindBack->setChecked((findFlags & QTextDocument::FindBackward) > 0);
 
     QCheckBox *qcbIgnoreCase = new QCheckBox(tr("大小写敏感"), findDlg);
     hLayout->addWidget(qcbIgnoreCase);
     connect(qcbIgnoreCase, &QCheckBox::clicked, this, [this](bool checked){
         updateFindTextFlags(QTextDocument::FindCaseSensitively, checked);
     });
-    qcbIgnoreCase->setCheckState(Qt::CheckState::Unchecked);
+    qcbIgnoreCase->setChecked((findFlags & QTextDocument::FindCaseSensitively) > 0);
 
     QCheckBox *qcbWholeWords = new QCheckBox(tr("全词匹配"), findDlg);
     hLayout->addWidget(qcbWholeWords);
     connect(qcbWholeWords, &QCheckBox::clicked, this, [this](bool checked){
         updateFindTextFlags(QTextDocument::FindWholeWords, checked);
     });
-    qcbWholeWords->setCheckState(Qt::CheckState::Unchecked);
+    qcbWholeWords->setChecked((findFlags & QTextDocument::FindWholeWords) > 0);
 
     QPushButton *btn= new QPushButton(tr("查找下一个"), findDlg);
     vLayout->addWidget(btn);
@@ -230,14 +231,13 @@ void MainWindow::showFindText()
 
 void MainWindow::updateFindTextFlags(QTextDocument::FindFlag flag, bool apply)
 {
-//    qDebug() << "updateFindTextFlags before :" << findFlags << "  " << apply;
     if(apply)
     {
        findFlags |= flag;
     }else {
        findFlags &= ~flag;
     }
-//    qDebug() << "updateFindTextFlags after :" << findFlags;
+    confUser.setFindFlags(findFlags);
 }
 
 void MainWindow::initEvent()
@@ -422,5 +422,22 @@ bool MainWindow::loadFile(const QString &fileName)
    curFile = QFileInfo(fileName).canonicalFilePath();
    setWindowTitle(curFile);
    return true;
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    QMessageBox::StandardButton button = QMessageBox::question(this,
+                                                              tr("退出程序"),
+                                                              QString(tr("确认退出程序")),
+                                                              QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::No == button)
+    {
+        event->ignore(); // 忽略退出信号，程序继续进行
+    }
+    else if(QMessageBox::Yes==button)
+    {
+        confUser.save();
+        event->accept(); // 接受退出信号，程序退出
+    }
 }
 

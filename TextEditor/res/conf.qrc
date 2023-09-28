@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>conf/conf_menu.json</file>
+        <file>conf/conf_user_def.json</file>
     </qresource>
 </RCC>

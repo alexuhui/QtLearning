@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include "qtextdocument.h"
+#include "src/conf/confuser.h"
 #include <QMainWindow>
 #include <map>
+#include <QCloseEvent>
 
 class QLineEdit;
 class QDialog;
@@ -20,6 +22,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::MainWindow *ui;
@@ -31,17 +35,26 @@ private:
     QTextDocument::FindFlags findFlags;
 
 private:
+    ConfUser confUser;
+
+private:
     void createMenu();
     void createMenuBtn(QJsonValue& menuConf);
     void createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& toolbarSeparator);
 
     void onActionClick(bool trigger, QString name);
 
-private slots:
-    void showFindText();
+private:
+    std::map<QString, std::function<bool()>> actionEvntMap;
+    void initEvent();
 
 private:
-    void updateFindTextFlags(QTextDocument::FindFlag flag, bool apply = true);
+    // 为真表示文件没有保存过，为假表示文件已经被保存过了
+    bool isUntitled;
+    // 保存当前文件的路径
+    QString curFile;
+    // 初始化
+    void init();
 
 private:
     bool saveFile(const QString &fileName); // 保存文件
@@ -60,20 +73,12 @@ private:
     bool findTxt();   // 搜索
 
 
-
-private:
-    std::map<QString, std::function<bool()>> actionEvntMap;
-    void initEvent();
-
-private:
-    // 为真表示文件没有保存过，为假表示文件已经被保存过了
-    bool isUntitled;
-    // 保存当前文件的路径
-    QString curFile;
-    // 初始化
-    void init();
+private slots:
+    void showFindText();
 
 private:
     void findInit();
+    void updateFindTextFlags(QTextDocument::FindFlag flag, bool apply = true);
 };
+
 #endif // MAINWINDOW_H
