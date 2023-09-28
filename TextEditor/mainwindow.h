@@ -1,14 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "qtextdocument.h"
 #include <QMainWindow>
 #include <map>
 
 class QLineEdit;
 class QDialog;
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+QT_BEGIN_NAMESPACE namespace Ui {
+  class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -26,6 +28,7 @@ private:
     QStatusBar* statusbar;
     QLineEdit *findLineEdit;
     QDialog *findDlg;
+    QTextDocument::FindFlags findFlags;
 
 private:
     void createMenu();
@@ -36,6 +39,9 @@ private:
 
 private slots:
     void showFindText();
+
+private:
+    void updateFindTextFlags(QTextDocument::FindFlag flag, bool apply = true);
 
 private:
     bool saveFile(const QString &fileName); // 保存文件
@@ -51,7 +57,7 @@ private:
     bool cut();       // 剪切
     bool copy();      // 复制
     bool paste();     // 粘贴
-    bool findTxt();
+    bool findTxt();   // 搜索
 
 
 

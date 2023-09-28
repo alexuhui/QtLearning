@@ -16,6 +16,8 @@
 #include <functional>
 #include <QLineEdit>
 #include <QDialog>
+#include <QHBoxLayout>
+#include <QCheckBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -49,10 +51,37 @@ void MainWindow::findInit()
     findDlg = new QDialog(this);
     findDlg->setWindowTitle(tr("查找"));
     findLineEdit = new QLineEdit(findDlg);
+    // 整体垂直布局
+    QVBoxLayout *vLayout= new QVBoxLayout(findDlg);
+    vLayout->addWidget(findLineEdit);
+
+    // 查找规则水平布局
+    QHBoxLayout *hLayout = new QHBoxLayout(findDlg);
+    vLayout->addLayout(hLayout);
+
+    QCheckBox *qcbFindBack = new QCheckBox(tr("反向查找"), findDlg);
+    hLayout->addWidget(qcbFindBack);
+    connect(qcbFindBack, &QCheckBox::clicked, this, [this](bool checked){
+        updateFindTextFlags(QTextDocument::FindBackward, checked);
+    });
+    qcbFindBack->setCheckState(Qt::CheckState::Unchecked);
+
+    QCheckBox *qcbIgnoreCase = new QCheckBox(tr("大小写敏感"), findDlg);
+    hLayout->addWidget(qcbIgnoreCase);
+    connect(qcbIgnoreCase, &QCheckBox::clicked, this, [this](bool checked){
+        updateFindTextFlags(QTextDocument::FindCaseSensitively, checked);
+    });
+    qcbIgnoreCase->setCheckState(Qt::CheckState::Unchecked);
+
+    QCheckBox *qcbWholeWords = new QCheckBox(tr("全词匹配"), findDlg);
+    hLayout->addWidget(qcbWholeWords);
+    connect(qcbWholeWords, &QCheckBox::clicked, this, [this](bool checked){
+        updateFindTextFlags(QTextDocument::FindWholeWords, checked);
+    });
+    qcbWholeWords->setCheckState(Qt::CheckState::Unchecked);
+
     QPushButton *btn= new QPushButton(tr("查找下一个"), findDlg);
-    QVBoxLayout *layout= new QVBoxLayout(findDlg);
-    layout->addWidget(findLineEdit);
-    layout->addWidget(btn);
+    vLayout->addWidget(btn);
     connect(btn, SIGNAL(clicked()), this, SLOT(showFindText()));
 }
 
@@ -175,11 +204,40 @@ void MainWindow::onActionClick(bool trigger, QString name)
 void MainWindow::showFindText()
 {
     QString str = findLineEdit->text();
-    if (!ui->textEdit->find(str, QTextDocument::FindBackward))
+    bool result = ui->textEdit->find(str, findFlags);
+//    qDebug() << findFlags ;
+    if(!result)
+    {
+        // 尝试跳到头/尾重查一次
+        if((findFlags & QTextDocument::FindBackward) == 0)
+        {
+            //正向搜索，重置光标到文本开始
+             ui->textEdit->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
+        }else
+        {
+            //反向搜索，重置光标到文本末尾
+            ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+        }
+        result = ui->textEdit->find(str, findFlags);
+    }
+
+    if (!result)
     {
        QMessageBox::warning(this, tr("查找"),
                 tr("找不到%1").arg(str));
     }
+}
+
+void MainWindow::updateFindTextFlags(QTextDocument::FindFlag flag, bool apply)
+{
+//    qDebug() << "updateFindTextFlags before :" << findFlags << "  " << apply;
+    if(apply)
+    {
+       findFlags |= flag;
+    }else {
+       findFlags &= ~flag;
+    }
+//    qDebug() << "updateFindTextFlags after :" << findFlags;
 }
 
 void MainWindow::initEvent()
