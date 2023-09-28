@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
-
+#include <set>
 
 class ConfUser
 {
@@ -22,18 +22,32 @@ private:
     QJsonObject localJsonObj;
 
 private:
+    void init();
+    QJsonValue getJsonValue(const char* key);
+public:
+    void save();
+
+//---------------- findFlags
+private:
     const char* keyFindFlags;
     QTextDocument::FindFlags findFlags;
     int findFlagsInt;
-
-private:
-    void init();
     void parseFindFlags();
 
 public:
     QTextDocument::FindFlags getFindFlags();
     void setFindFlags(QTextDocument::FindFlags flags);
-    void save();
+
+//------------------ openHistory
+private:
+    const char* keyOpenHistory;
+    const int maxHistoryCnt;
+    std::set<QString> openHistory;
+    void parseOpenHistory();
+
+public:
+    QString getLastOpenFilePath(bool checkExist = true);
+    void setLastOpenFilePath(QString path);
 
 };
 

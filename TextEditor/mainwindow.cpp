@@ -48,6 +48,15 @@ void MainWindow::init()
                             "selection-color: yellow;"
                             "selection-background-color: blue;");
     initEvent();
+    historyInit();
+}
+
+void MainWindow::historyInit()
+{
+    QString last = confUser.getLastOpenFilePath();
+    if(last.isNull() || last.isEmpty())
+        return;
+    loadFile(last);
 }
 
 void MainWindow::findInit()
@@ -287,6 +296,8 @@ bool MainWindow::openFile()
         if (!fileName.isEmpty()) {
             loadFile(fileName);
             ui->textEdit->setVisible(true);
+
+            confUser.setLastOpenFilePath(fileName);
         }
 
         return true;
@@ -404,6 +415,7 @@ bool MainWindow::saveFile(const QString &fileName)
    isUntitled = false;
    // 获得文件的标准路径
    curFile = QFileInfo(fileName).canonicalFilePath();
+   confUser.setLastOpenFilePath(curFile);
    setWindowTitle(curFile);
    return true;
 }

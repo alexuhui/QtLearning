@@ -79,6 +79,9 @@ private slots:
 private:
     void findInit();
     void updateFindTextFlags(QTextDocument::FindFlag flag, bool apply = true);
+
+private:
+    void historyInit();
 };
 
 #endif // MAINWINDOW_H

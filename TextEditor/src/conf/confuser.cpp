@@ -7,7 +7,9 @@
 ConfUser::ConfUser():
     defConf (":/conf/conf_user_def.json"),
     localConf ("./conf_user.json"),
-    keyFindFlags("findFlags")
+    keyFindFlags("findFlags"),
+    keyOpenHistory("openHistory"),
+    maxHistoryCnt(5)
 {
     init();
 }
@@ -40,16 +42,24 @@ void ConfUser::init()
 
     // -- 文本查找规则
     parseFindFlags();
+    // -- 历史打开文件路径
+    parseOpenHistory();
+}
+
+QJsonValue  ConfUser::getJsonValue(const char* key)
+{
+    QJsonValue jvalue = localJsonDoc[key];
+    if(jvalue.isNull())
+    {
+        jvalue = defJsonDoc[key];
+    }
+    return jvalue;
 }
 
 // -- 文本查找规则
 void ConfUser::parseFindFlags()
 {
-    QJsonValue jsFindFlags = localJsonDoc[keyFindFlags];
-    if(jsFindFlags.isNull())
-    {
-        jsFindFlags = defJsonDoc[keyFindFlags];
-    }
+    QJsonValue jsFindFlags = getJsonValue(keyFindFlags);
     int flagInt = jsFindFlags.toInt(0);
     auto flags = QTextDocument::FindFlags(flagInt);
     setFindFlags(flags);
@@ -60,12 +70,50 @@ void ConfUser::setFindFlags(QTextDocument::FindFlags flags)
     findFlags = flags;
     findFlagsInt = findFlags;
     localJsonObj[keyFindFlags] = findFlagsInt;
-//    qDebug() << "findFlagsInt : " << findFlagsInt << " findFlags : " << findFlags;
 }
 
 QTextDocument::FindFlags ConfUser::getFindFlags()
 {
     return findFlags;
+}
+
+void ConfUser::parseOpenHistory()
+{
+    QJsonValue jsHistory = getJsonValue(keyOpenHistory);
+    auto arr = jsHistory.toArray();
+    foreach (auto item, arr) {
+        openHistory.insert(item.toString());
+    }
+}
+
+QString ConfUser::getLastOpenFilePath(bool checkExist)
+{
+    std::set<QString>::reverse_iterator rit = openHistory.rbegin();
+    QFileInfo fileInfo;
+    while(checkExist && !fileInfo.isFile() && rit != openHistory.rend())
+    {
+        fileInfo = *rit;
+        rit ++;
+    }
+    return fileInfo.fileName();
+}
+
+void ConfUser::setLastOpenFilePath(QString path)
+{
+    openHistory.insert(path);
+    int size = openHistory.size();
+    if(size > maxHistoryCnt)
+    {
+        std::set<QString>::iterator it = openHistory.begin();
+        openHistory.erase(it, it ++);
+    }
+
+    QJsonArray jarr;
+    foreach (QString it, openHistory) {
+        jarr.append(it);
+        qDebug() << "history : " << it ;
+    }
+    localJsonObj[keyOpenHistory] = jarr;
 }
 
 void ConfUser::save()
