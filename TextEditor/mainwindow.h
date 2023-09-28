@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <map>
 
+class QLineEdit;
+class QDialog;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,12 +24,18 @@ private:
     QMenuBar* menubar;
     QToolBar* toolbar;
     QStatusBar* statusbar;
+    QLineEdit *findLineEdit;
+    QDialog *findDlg;
 
+private:
     void createMenu();
     void createMenuBtn(QJsonValue& menuConf);
     void createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& toolbarSeparator);
 
     void onActionClick(bool trigger, QString name);
+
+private slots:
+    void showFindText();
 
 private:
     bool saveFile(const QString &fileName); // 保存文件
@@ -43,6 +51,7 @@ private:
     bool cut();       // 剪切
     bool copy();      // 复制
     bool paste();     // 粘贴
+    bool findTxt();
 
 
 
@@ -57,5 +66,8 @@ private:
     QString curFile;
     // 初始化
     void init();
+
+private:
+    void findInit();
 };
 #endif // MAINWINDOW_H

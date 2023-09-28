@@ -14,6 +14,8 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <functional>
+#include <QLineEdit>
+#include <QDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     createMenu();
     init();
+    findInit();
 }
 
 MainWindow::~MainWindow()
@@ -39,6 +42,18 @@ void MainWindow::init()
     setWindowTitle(curFile);
 
     initEvent();
+}
+
+void MainWindow::findInit()
+{
+    findDlg = new QDialog(this);
+    findDlg->setWindowTitle(tr("查找"));
+    findLineEdit = new QLineEdit(findDlg);
+    QPushButton *btn= new QPushButton(tr("查找下一个"), findDlg);
+    QVBoxLayout *layout= new QVBoxLayout(findDlg);
+    layout->addWidget(findLineEdit);
+    layout->addWidget(btn);
+    connect(btn, SIGNAL(clicked()), this, SLOT(showFindText()));
 }
 
 void MainWindow::createMenu()
@@ -157,6 +172,16 @@ void MainWindow::onActionClick(bool trigger, QString name)
     }
 }
 
+void MainWindow::showFindText()
+{
+    QString str = findLineEdit->text();
+    if (!ui->textEdit->find(str, QTextDocument::FindBackward))
+    {
+       QMessageBox::warning(this, tr("查找"),
+                tr("找不到%1").arg(str));
+    }
+}
+
 void MainWindow::initEvent()
 {
     actionEvntMap = {
@@ -170,7 +195,7 @@ void MainWindow::initEvent()
         {"cut", std::bind(&MainWindow::cut, this)},
         {"copy", std::bind(&MainWindow::copy, this)},
         {"paste", std::bind(&MainWindow::paste, this)},
-        {"find", NULL},
+        {"find", std::bind(&MainWindow::findTxt, this)},
         {"version", NULL},
 
     };
@@ -247,6 +272,12 @@ bool MainWindow::copy()
 bool MainWindow::paste()
 {
     ui->textEdit->paste();
+    return true;
+}
+
+bool MainWindow::findTxt()
+{
+    findDlg->show();
     return true;
 }
 
