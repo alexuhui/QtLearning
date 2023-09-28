@@ -35,7 +35,7 @@
                 "status" : "保存文件"
             },
             {
-                "name":"save_other",
+                "name":"save_as",
                 "text":"另存为(&A)",
                 "iocn":":/icon/049.png",
                 "toolbar":true,

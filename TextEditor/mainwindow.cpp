@@ -141,10 +141,17 @@ void MainWindow::createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& 
 void MainWindow::onActionClick(bool trigger, QString name)
 {
     qDebug() << name << " tri : " << trigger;
-    auto func = actionEvntMap.find(name);
-    if(func != actionEvntMap.end())
+    auto kv = actionEvntMap.find(name);
+    if(kv != actionEvntMap.end())
     {
-        qDebug() << name << "  执行回调 ";
+        auto func = kv->second;
+        if(func != NULL)
+        {
+            func();
+        }else{
+            qDebug() << name << "  回调方法未实现 ";
+        }
+
     }else {
         qDebug() << name << "  未注册回调方法 ";
     }
@@ -154,7 +161,18 @@ void MainWindow::initEvent()
 {
     actionEvntMap = {
         {"new", std::bind(&MainWindow::newFile, this)},
+        {"open", std::bind(&MainWindow::openFile, this)},
+        {"close", std::bind(&MainWindow::close, this)},
         {"save", std::bind(&MainWindow::save, this)},
+        {"save_as", std::bind(&MainWindow::saveAs, this)},
+        {"exit", std::bind(&MainWindow::exit, this)},
+        {"undo", std::bind(&MainWindow::undo, this)},
+        {"cut", std::bind(&MainWindow::cut, this)},
+        {"copy", std::bind(&MainWindow::copy, this)},
+        {"paste", std::bind(&MainWindow::paste, this)},
+        {"find", NULL},
+        {"version", NULL},
+
     };
 }
 
@@ -170,6 +188,66 @@ bool MainWindow::newFile()
         return true;
     }
     return false;
+}
+
+bool MainWindow::openFile()
+{
+    if (maybeSave()) {
+
+        QString fileName = QFileDialog::getOpenFileName(this);
+
+        // 如果文件名不为空，则加载文件
+        if (!fileName.isEmpty()) {
+            loadFile(fileName);
+            ui->textEdit->setVisible(true);
+        }
+
+        return true;
+    }
+    return false;
+}
+
+bool MainWindow::closeFile()
+{
+    if (maybeSave()) {
+        ui->textEdit->setVisible(false);
+        return true;
+    }
+    return false;
+}
+
+bool MainWindow::exit()
+{
+    if(!closeFile())
+    {
+        return false;
+    }
+    qApp->quit();
+    return true;
+}
+
+bool MainWindow::undo()
+{
+    ui->textEdit->undo();
+    return true;
+}
+
+bool MainWindow::cut()
+{
+    ui->textEdit->cut();
+    return true;
+}
+
+bool MainWindow::copy()
+{
+    ui->textEdit->copy();
+    return true;
+}
+
+bool MainWindow::paste()
+{
+    ui->textEdit->paste();
+    return true;
 }
 
 bool MainWindow::maybeSave()
@@ -232,6 +310,26 @@ bool MainWindow::saveFile(const QString &fileName)
    QApplication::restoreOverrideCursor();
    isUntitled = false;
    // 获得文件的标准路径
+   curFile = QFileInfo(fileName).canonicalFilePath();
+   setWindowTitle(curFile);
+   return true;
+}
+
+bool MainWindow::loadFile(const QString &fileName)
+{
+   QFile file(fileName); // 新建QFile对象
+   if (!file.open(QFile::ReadOnly | QFile::Text)) {
+       QMessageBox::warning(this, tr("多文档编辑器"),
+                            tr("无法读取文件 %1:\n%2.")
+                             .arg(fileName).arg(file.errorString()));
+       return false; // 只读方式打开文件，出错则提示，并返回false
+   }
+   QTextStream in(&file); // 新建文本流对象
+   QApplication::setOverrideCursor(Qt::WaitCursor);
+   // 读取文件的全部文本内容，并添加到编辑器中
+   ui->textEdit->setPlainText(in.readAll());      QApplication::restoreOverrideCursor();
+
+   // 设置当前文件
    curFile = QFileInfo(fileName).canonicalFilePath();
    setWindowTitle(curFile);
    return true;

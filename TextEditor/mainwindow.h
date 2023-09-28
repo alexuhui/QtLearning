@@ -30,11 +30,23 @@ private:
     void onActionClick(bool trigger, QString name);
 
 private:
-    bool newFile();   // 新建操作
+    bool saveFile(const QString &fileName); // 保存文件
+    bool loadFile(const QString &fileName); // 加载文件
     bool maybeSave(); // 判断是否需要保存
+    bool newFile();   // 新建操作
+    bool openFile();  // 打开文件
+    bool closeFile(); // 关闭文件
     bool save();      // 保存操作
     bool saveAs();    // 另存为操作
-    bool saveFile(const QString &fileName); // 保存文件
+    bool exit();      // 退出
+    bool undo();      // 撤销
+    bool cut();       // 剪切
+    bool copy();      // 复制
+    bool paste();     // 粘贴
+
+
+
+private:
     std::map<QString, std::function<bool()>> actionEvntMap;
     void initEvent();
 
