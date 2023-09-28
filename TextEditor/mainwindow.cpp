@@ -43,6 +43,10 @@ void MainWindow::init()
     // 初始化窗口标题为文件名
     setWindowTitle(curFile);
 
+    ui->textEdit->setStyleSheet("color: black;"
+                            "background-color: white;"
+                            "selection-color: yellow;"
+                            "selection-background-color: blue;");
     initEvent();
 }
 
@@ -56,7 +60,7 @@ void MainWindow::findInit()
     vLayout->addWidget(findLineEdit);
 
     // 查找规则水平布局
-    QHBoxLayout *hLayout = new QHBoxLayout(findDlg);
+    QHBoxLayout *hLayout = new QHBoxLayout();
     vLayout->addLayout(hLayout);
 
     findFlags = confUser.getFindFlags();

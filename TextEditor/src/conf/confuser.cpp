@@ -60,7 +60,7 @@ void ConfUser::setFindFlags(QTextDocument::FindFlags flags)
     findFlags = flags;
     findFlagsInt = findFlags;
     localJsonObj[keyFindFlags] = findFlagsInt;
-    qDebug() << "findFlagsInt : " << findFlagsInt << " findFlags : " << findFlags;
+//    qDebug() << "findFlagsInt : " << findFlagsInt << " findFlags : " << findFlags;
 }
 
 QTextDocument::FindFlags ConfUser::getFindFlags()
