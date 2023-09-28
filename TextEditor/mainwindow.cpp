@@ -140,7 +140,7 @@ void MainWindow::createMenuActionBtn(QMenu* menu, QJsonValue& actionConf, bool& 
 
 void MainWindow::onActionClick(bool trigger, QString name)
 {
-    qDebug() << name << " tri : " << trigger;
+//    qDebug() << name << " tri : " << trigger;
     auto kv = actionEvntMap.find(name);
     if(kv != actionEvntMap.end())
     {
